@@ -153,8 +153,8 @@ def configure_peer_route(ec2_c, peer_conn_id, requester_vpc_id, accepter_vpc_id)
 
     print(cnxn)
 
-    update_route_tables(peer_conn_id, requester_vpc_id ,accepter_vpc_id)
-    update_route_tables(peer_conn_id, accepter_vpc_id, requester_vpc_id)
+    update_route_tables(ec2_c, peer_conn_id, requester_vpc_id ,accepter_vpc_id)
+    update_route_tables(ec2_c, peer_conn_id, accepter_vpc_id, requester_vpc_id)
 
     print("Done!")
 
