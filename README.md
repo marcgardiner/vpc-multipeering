@@ -22,4 +22,4 @@ This script creates VPCs and makes multiple VPC peering connection.
  
  - ./entrypoint.sh -e dev -m "vpc-05c3858734b8f1d7c" -i "ami-25615740" -n "zio-vpc-sub-1" -c "173.0.0.0/16" -s "173.2.0.0/24"
 
- - ./entrypoint.sh -e dev -m "vpc-05c3858734b8f1d7c" -i "ami-25615740" -n "zio-vpc-sub-1" -c "173.0.0.0/16" -s "173.2.0.0/24"
+ - ./entrypoint.sh -e dev -m "vpc-05c3858734b8f1d7c" -i "ami-25615740" -n "zio-vpc-sub-2" -c "174.0.0.0/16" -s "174.1.0.0/24"
