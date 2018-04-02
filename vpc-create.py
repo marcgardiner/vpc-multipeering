@@ -22,6 +22,9 @@ VPC_SUBNET = ''
 
 
 def main():
+    global AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME
+    global VPC_MAIN_ID, AMI_ID, VPC_NAME, VPC_CIDR, VPC_SUBNET
+
     parser = argparse.ArgumentParser(description="vpc creation")
     parser.add_argument('-e', '--env', help="The configuration file. i.e dev.json", required=True)
     parser.add_argument('-m', '--main-id', help="The main VPC ID", required=True)
@@ -83,8 +86,6 @@ def main():
 
 
 def create_vpc(conn):
-    print("Connection established")
-
     vpc = conn.create_vpc(CidrBlock=VPC_CIDR)
     vpc.create_tags(Tags=[{"Key": "Name", "Value": VPC_NAME}])
     vpc.wait_until_available()
