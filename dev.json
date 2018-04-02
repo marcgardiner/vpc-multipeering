@@ -2,8 +2,8 @@
   "credential":
   {
     "AWS_ACCOUNT_ID": "869203434640",
-    "AWS_ACCESS_KEY_ID": "test",
-    "AWS_SECRET_ACCESS_KEY": "test",
-    "REGION_NAME": "us-east-2a"
+    "AWS_ACCESS_KEY_ID": "AKIAISDHSVTHJ5S7DISA",
+    "AWS_SECRET_ACCESS_KEY": "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",
+    "REGION_NAME": "us-east-2"
   }
 }

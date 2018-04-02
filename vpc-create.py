@@ -125,10 +125,14 @@ def create_vpc(conn):
 
     print(instances[0].id)
 
-    create_vpc_peering_connection(conn, vpc.id)
+    create_vpc_peering_connection(vpc.id)
 
 
-def create_vpc_peering_connection(ec2_c, requester_vpc_id):
+def create_vpc_peering_connection(requester_vpc_id):
+    ec2_c = boto3.client('ec2', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                         region_name=REGION_NAME)
+
     peer_connection = ec2_c.create_vpc_peering_connection(
         DryRun=False,
         PeerOwnerId=AWS_ACCOUNT_ID,
