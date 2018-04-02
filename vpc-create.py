@@ -194,11 +194,13 @@ def add_routes(rt, route_dests, peer_conn_id):
                     RouteTableId=rt_id
                 )
 
-            print("Added route to {0} in table {1}.").format(r, rt_id)
+
+            print()
+            print("Added route to {0} in table {1}.".format(r, rt_id))
 
         except ClientError as e:
             if e.response['Error']['Code'] == 'RouteAlreadyExists':
-                print("Route already exists for {0} in table {1}").format(r, rt_id)
+                print("Route already exists for {0} in table {1}".format(r, rt_id))
             else:
                 print(e)
                 sys.exit(1)
