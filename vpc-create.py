@@ -86,38 +86,44 @@ def main():
 
 
 def create_vpc(conn):
+    conn = boto3.resource('ec2', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                          region_name=REGION_NAME)
+    print("Connection established")
+
     vpc = conn.create_vpc(CidrBlock=VPC_CIDR)
     vpc.create_tags(Tags=[{"Key": "Name", "Value": VPC_NAME}])
     vpc.wait_until_available()
-
-    print("New VPC created")
+    print("VPC Created")
 
     gateway = conn.create_internet_gateway()
     vpc.attach_internet_gateway(InternetGatewayId=gateway.id)
+    print(gateway.id)
 
     route_table = conn.create_route_table(VpcId=vpc.id)
+    print(route_table.id)
+
     subnet = conn.create_subnet(CidrBlock=VPC_CIDR, VpcId=vpc.id)
+    print(subnet.id)
+
     route_table.associate_with_subnet(SubnetId=subnet.id)
+    print("associated with routing table")
 
-    print("Associated with routing table")
-
-    sec_groups = conn.describe_security_groups()
-    for sg in sec_groups['SecurityGroups']:
-        if sg['VpcId'] == VPC_MAIN_ID:
-            main_sec_group_id = sg['GroupId']
+    sg = conn.create_security_group(GroupName=VPC_NAME,
+                                    Description=VPC_NAME,
+                                    VpcId=vpc.id)
+    sg.authorize_ingress(IpProtocol='icmp', FromPort=-1, ToPort=-1, CidrIp='0.0.0.0/0')
+    print(sg.id)
 
     instances = conn.create_instances(
         ImageId=AMI_ID, InstanceType='t2.micro', MaxCount=1, MinCount=1,
-        NetworkInterfaces=[{
-            'SubnetId': subnet.id,
-            'DeviceIndex': 0,
-            'AssociatePublicIpAddress': False,
-            'Groups': [main_sec_group_id]
-        }]
-    )
-    instances[0].wait_untl_running()
+        NetworkInterfaces=[{'SubnetId': subnet.id,
+                            'DeviceIndex': 0,
+                            'AssociatePublicIpAddress': True,
+                            'Groups': [sg.group_id]}])
+    instances[0].wait_until_running()
 
-    print("EC2 instance created")
+    print(instances[0].id)
 
     create_vpc_peering_connection(conn, vpc.id)
 
@@ -144,6 +150,7 @@ def configure_peer_route(ec2_c, peer_conn_id, requester_vpc_id, accepter_vpc_id)
     print(cnxn)
 
     update_route_tables(peer_conn_id, requester_vpc_id ,accepter_vpc_id)
+    update_route_tables(peer_conn_id, accepter_vpc_id, requester_vpc_id)
 
     print("Done!")
 
